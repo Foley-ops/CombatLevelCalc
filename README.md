@@ -6,11 +6,6 @@ OSRS Combat Level Calculator
 ## Getting Started
 Clone this repository to your local machine and run combat_calculator.py.
 
-git clone  <!-- Replace with repo URL -->
-cd OSRSCombatCalculator
-python combat_calculator.py
-
-
 ## Prerequisites
 This application is written in Python and requires Tkinter for the GUI. Both Python and Tkinter should be included in standard Python installations.
 
