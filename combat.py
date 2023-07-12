@@ -2,21 +2,21 @@ import tkinter as tk
 import math
 
 
-# function to calculate combat level
+# Function to calculate combat level
 def calculate_combat_level():
-    attack = int(attack_entry.get())
-    strength = int(strength_entry.get())
-    defence = int(defence_entry.get())
-    hitpoints = int(hitpoints_entry.get())
-    prayer = int(prayer_entry.get())
-    ranged = int(ranged_entry.get())
-    magic = int(magic_entry.get())
+    attack = int(attack_spin.get())
+    strength = int(strength_spin.get())
+    defence = int(defence_spin.get())
+    hitpoints = int(hitpoints_spin.get())
+    prayer = int(prayer_spin.get())
+    ranged = int(ranged_spin.get())
+    magic = int(magic_spin.get())
 
     base = 0.25 * (defence + hitpoints + math.floor(prayer / 2))
 
     melee = 0.325 * (attack + strength)
-    ranged = 0.325 * ranged
-    magic = 0.325 * magic
+    ranged = 0.325 * (math.floor(ranged/2) + ranged)
+    magic = 0.325 * (math.floor(magic/2) + magic)
 
     if melee >= ranged and melee >= magic:
         combat_level = base + melee
@@ -25,43 +25,45 @@ def calculate_combat_level():
     else:
         combat_level = base + magic
 
-    result_label.config(text=f"Projected Combat Level: {combat_level}")
+    result_label.config(text=f"Projected Combat Level: {format(combat_level, '.2f')}")
 
 
-# setup GUI
+# Setup GUI
 root = tk.Tk()
 root.title("OSRS Combat Level Calculator")
+root.minsize(400, 500)  # Set minimum window size
 
-# create entry fields and labels
-attack_entry = tk.Entry(root)
-strength_entry = tk.Entry(root)
-defence_entry = tk.Entry(root)
-hitpoints_entry = tk.Entry(root)
-prayer_entry = tk.Entry(root)
-ranged_entry = tk.Entry(root)
-magic_entry = tk.Entry(root)
+# Create spinboxes for each skill level
+attack_spin = tk.Spinbox(root, from_=1, to=99)
+strength_spin = tk.Spinbox(root, from_=1, to=99)
+defence_spin = tk.Spinbox(root, from_=1, to=99)
+hitpoints_spin = tk.Spinbox(root, from_=10, to=99)
+prayer_spin = tk.Spinbox(root, from_=1, to=99)
+ranged_spin = tk.Spinbox(root, from_=1, to=99)
+magic_spin = tk.Spinbox(root, from_=1, to=99)
 
+# Pack spinboxes with their corresponding labels
 tk.Label(root, text="Attack Level:").pack()
-attack_entry.pack()
+attack_spin.pack()
 tk.Label(root, text="Strength Level:").pack()
-strength_entry.pack()
+strength_spin.pack()
 tk.Label(root, text="Defence Level:").pack()
-defence_entry.pack()
+defence_spin.pack()
 tk.Label(root, text="Hitpoints Level:").pack()
-hitpoints_entry.pack()
+hitpoints_spin.pack()
 tk.Label(root, text="Prayer Level:").pack()
-prayer_entry.pack()
+prayer_spin.pack()
 tk.Label(root, text="Ranged Level:").pack()
-ranged_entry.pack()
+ranged_spin.pack()
 tk.Label(root, text="Magic Level:").pack()
-magic_entry.pack()
+magic_spin.pack()
 
-# create calculate button
+# Create calculate button
 tk.Button(root, text="Calculate Combat Level", command=calculate_combat_level).pack()
 
-# label to display result
+# Label to display result
 result_label = tk.Label(root, text="")
 result_label.pack()
 
-# run the GUI
+# Run the GUI
 root.mainloop()
