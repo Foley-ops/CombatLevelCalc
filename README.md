@@ -1,8 +1,6 @@
 # Old School RuneScape Combat Level Calculator
 This project is a simple GUI-based combat level calculator for Old School RuneScape. It allows players to input their current skill levels and calculate their projected combat level in real time.
 
-OSRS Combat Level Calculator 
-
 ## Getting Started
 Clone this repository to your local machine and run combat_calculator.py.
 
