@@ -2,7 +2,6 @@ import tkinter as tk
 import math
 from tkinter import messagebox
 
-
 # Function to calculate combat level
 def calculate_combat_level(*args):
     try:
@@ -16,8 +15,8 @@ def calculate_combat_level(*args):
 
         base = 0.25 * (defence + hitpoints + math.floor(prayer / 2))
         melee = 0.325 * (attack + strength)
-        ranged = 0.325 * (math.floor(ranged / 2) + ranged)
-        magic = 0.325 * (math.floor(magic / 2) + magic)
+        ranged = 0.325 * (math.floor(ranged/2) + ranged)
+        magic = 0.325 * (math.floor(magic/2) + magic)
 
         if melee >= ranged and melee >= magic:
             combat_level = base + melee
@@ -27,17 +26,12 @@ def calculate_combat_level(*args):
             combat_level = base + magic
 
         result_label.config(text=f"Projected Combat Level: {round(combat_level, 2)}")
-    except ValueError:  # Ignore when the Spinboxes are empty or not valid integers
+    except ValueError: # Ignore when the Spinboxes are empty or not valid integers
         pass
-
 
 # Display help instructions
 def show_help():
-    messagebox.showinfo(
-        "Instructions",
-        "Enter your current skill levels in the provided fields to calculate your projected combat level.",
-    )
-
+    messagebox.showinfo("Instructions", "Enter your current skill levels in the provided fields to calculate your projected combat level.")
 
 # Setup GUI
 root = tk.Tk()
