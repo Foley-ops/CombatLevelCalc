@@ -1,93 +1,62 @@
-import tkinter as tk
+from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFormLayout, QLineEdit, QDoubleSpinBox
+from PyQt5.QtCore import Qt
+import sys
 import math
-from tkinter import messagebox
 
-# Function to calculate combat level
-def calculate_combat_level(*args):
-    try:
-        attack = int(attack_var.get())
-        strength = int(strength_var.get())
-        defence = int(defence_var.get())
-        hitpoints = int(hitpoints_var.get())
-        prayer = int(prayer_var.get())
-        ranged = int(ranged_var.get())
-        magic = int(magic_var.get())
+class CombatLevelCalculator(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Create layout
+        self.layout = QFormLayout()
+
+        # Create and add widgets to layout
+        self.attack_input = self.create_input_field('Attack:')
+        self.strength_input = self.create_input_field('Strength:')
+        self.defence_input = self.create_input_field('Defence:')
+        self.hitpoints_input = self.create_input_field('Hitpoints:')
+        self.ranged_input = self.create_input_field('Ranged:')
+        self.prayer_input = self.create_input_field('Prayer:')
+        self.magic_input = self.create_input_field('Magic:')
+
+        self.calculate_button = QPushButton('Calculate')
+        self.calculate_button.clicked.connect(self.calculate_combat_level)
+        self.layout.addRow(self.calculate_button)
+
+        self.combat_level_label = QLabel('')
+        self.layout.addRow('Combat Level:', self.combat_level_label)
+
+        # Set layout on widget
+        self.setLayout(self.layout)
+
+    def create_input_field(self, label_text):
+        input_field = QDoubleSpinBox()
+        input_field.setRange(1, 99)
+        input_field.setDecimals(0)
+        self.layout.addRow(QLabel(label_text), input_field)
+        return input_field
+
+    def calculate_combat_level(self):
+        attack = self.attack_input.value()
+        strength = self.strength_input.value()
+        defence = self.defence_input.value()
+        hitpoints = self.hitpoints_input.value()
+        ranged = self.ranged_input.value()
+        prayer = self.prayer_input.value()
+        magic = self.magic_input.value()
 
         base = 0.25 * (defence + hitpoints + math.floor(prayer / 2))
         melee = 0.325 * (attack + strength)
-        ranged = 0.325 * (math.floor(ranged/2) + ranged)
-        magic = 0.325 * (math.floor(magic/2) + magic)
+        ranger = 0.325 * (math.floor(ranged / 2) + ranged)
+        mage = 0.325 * (math.floor(magic / 2) + magic)
+        combat_level = base + max(melee, ranger, mage)
+        combat_level = round(combat_level, 2)
 
-        if melee >= ranged and melee >= magic:
-            combat_level = base + melee
-        elif ranged >= melee and ranged >= magic:
-            combat_level = base + ranged
-        else:
-            combat_level = base + magic
+        self.combat_level_label.setText(str(combat_level))
 
-        result_label.config(text=f"Projected Combat Level: {round(combat_level, 2)}")
-    except ValueError: # Ignore when the Spinboxes are empty or not valid integers
-        pass
+app = QApplication(sys.argv)
 
-# Display help instructions
-def show_help():
-    messagebox.showinfo("Instructions", "Enter your current skill levels in the provided fields to calculate your projected combat level.")
+calculator = CombatLevelCalculator()
+calculator.show()
 
-# Setup GUI
-root = tk.Tk()
-root.title("OSRS Combat Level Calculator")
-root.minsize(400, 500)  # Set minimum window size
-
-# Create StringVars for each skill level and trace them
-attack_var = tk.StringVar(root)
-strength_var = tk.StringVar(root)
-defence_var = tk.StringVar(root)
-hitpoints_var = tk.StringVar(root)
-prayer_var = tk.StringVar(root)
-ranged_var = tk.StringVar(root)
-magic_var = tk.StringVar(root)
-
-# Create spinboxes for each skill level, using the StringVars
-attack_spin = tk.Spinbox(root, from_=1, to=99, textvariable=attack_var)
-strength_spin = tk.Spinbox(root, from_=1, to=99, textvariable=strength_var)
-defence_spin = tk.Spinbox(root, from_=1, to=99, textvariable=defence_var)
-hitpoints_spin = tk.Spinbox(root, from_=10, to=99, textvariable=hitpoints_var)
-prayer_spin = tk.Spinbox(root, from_=1, to=99, textvariable=prayer_var)
-ranged_spin = tk.Spinbox(root, from_=1, to=99, textvariable=ranged_var)
-magic_spin = tk.Spinbox(root, from_=1, to=99, textvariable=magic_var)
-
-# Pack spinboxes with their corresponding labels
-tk.Label(root, text="Attack Level:").pack()
-attack_spin.pack()
-tk.Label(root, text="Strength Level:").pack()
-strength_spin.pack()
-tk.Label(root, text="Defence Level:").pack()
-defence_spin.pack()
-tk.Label(root, text="Hitpoints Level:").pack()
-hitpoints_spin.pack()
-tk.Label(root, text="Prayer Level:").pack()
-prayer_spin.pack()
-tk.Label(root, text="Ranged Level:").pack()
-ranged_spin.pack()
-tk.Label(root, text="Magic Level:").pack()
-magic_spin.pack()
-
-# Label to display result
-result_label = tk.Label(root, text="")
-result_label.pack()
-
-# Button to show instructions
-help_button = tk.Button(root, text="Help", command=show_help)
-help_button.pack()
-
-# Trace variables
-attack_var.trace("w", calculate_combat_level)
-strength_var.trace("w", calculate_combat_level)
-defence_var.trace("w", calculate_combat_level)
-hitpoints_var.trace("w", calculate_combat_level)
-prayer_var.trace("w", calculate_combat_level)
-ranged_var.trace("w", calculate_combat_level)
-magic_var.trace("w", calculate_combat_level)
-
-# Run the GUI
-root.mainloop()
+sys.exit(app.exec_())
